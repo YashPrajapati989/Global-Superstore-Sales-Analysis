@@ -90,6 +90,20 @@ dim_customers   dim_products   dim_locations   dim_dates
 
 ---
 
+## 🧹 Data Quality Decisions
+
+During schema cleanup, deliberate decisions were made to improve the integrity and clarity of the analytical model. These are documented here for transparency and reproducibility.
+
+| Field | Table | Action | Reason |
+|-------|-------|--------|--------|
+| `market2` | `dim_locations` | Removed | Entirely NULL across all records (3,819/3,819) |
+
+> **Why this matters:** The `market2` field in the `locations` dimension was found to be entirely NULL (3,819/3,819 records). Since it contained no usable information and did not contribute to any analytical model, it was removed during schema cleanup to improve data quality and clarity.
+
+Removing empty or redundant columns is a standard practice in dimensional modelling — retaining NULL-only fields adds schema noise, risks confusion during joins, and can mislead downstream consumers of the data. Decisions like this reflect real-world data engineering judgement, not just mechanical SQL execution.
+
+---
+
 ## ⭐ Star Schema Design
 
 ```

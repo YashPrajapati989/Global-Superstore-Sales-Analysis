@@ -294,13 +294,13 @@ Core business metrics computed across the entire dataset.
 ### Top 5 Most Profitable Products
 ```sql
 SELECT
-    product_name,
-    category,
-    ROUND(SUM(profit)::numeric, 2) AS total_profit,
-    ROUND(SUM(sales)::numeric, 2)  AS total_sales
-FROM fact_sales fs
-JOIN dim_products dp ON fs.product_id = dp.product_id
-GROUP BY product_name, category
+    p.product_name,
+    p.category,
+    ROUND(SUM(s.profit)::numeric, 2) AS total_profit,
+    ROUND(SUM(s.sales)::numeric, 2)  AS total_sales
+FROM sales s
+JOIN products p ON s.product_id = p.product_id
+GROUP BY p.product_name, p.category
 ORDER BY total_profit DESC
 LIMIT 5;
 ```
@@ -308,24 +308,24 @@ LIMIT 5;
 ### Profit by Market
 ```sql
 SELECT
-    market,
-    ROUND(SUM(sales)::numeric, 2)  AS total_sales,
-    ROUND(SUM(profit)::numeric, 2) AS total_profit,
-    ROUND((SUM(profit) / NULLIF(SUM(sales), 0) * 100)::numeric, 2) AS margin_pct
-FROM fact_sales fs
-JOIN dim_locations dl ON fs.location_id = dl.location_id
-GROUP BY market
+    l.market,
+    ROUND(SUM(s.sales)::numeric, 2)  AS total_sales,
+    ROUND(SUM(s.profit)::numeric, 2) AS total_profit,
+    ROUND((SUM(s.profit) / NULLIF(SUM(s.sales), 0) * 100)::numeric, 2) AS margin_pct
+FROM sales s
+JOIN locations l ON s.location_id = l.location_id
+GROUP BY l.market
 ORDER BY total_profit DESC;
 ```
 
 ### Monthly Sales Trend
 ```sql
 SELECT
-    DATE_TRUNC('month', order_date) AS month,
-    ROUND(SUM(sales)::numeric, 2)   AS monthly_sales,
-    ROUND(SUM(profit)::numeric, 2)  AS monthly_profit
-FROM fact_sales fs
-JOIN dim_dates dd ON fs.date_id = dd.date_id
+    DATE_TRUNC('month', o.order_date) AS month,
+    ROUND(SUM(s.sales)::numeric, 2)   AS monthly_sales,
+    ROUND(SUM(s.profit)::numeric, 2)  AS monthly_profit
+FROM sales s
+JOIN orders o ON s.order_id = d.order_id
 GROUP BY month
 ORDER BY month;
 ```

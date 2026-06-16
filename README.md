@@ -9,6 +9,7 @@
 > A complete end-to-end SQL analytics project — from raw CSV ingestion to actionable business intelligence — using PostgreSQL 17 on the Global Superstore dataset.
 
 ---
+![Global-Superstore-Sales-Analysis](Images/banner.png)
 
 ## 📌 Table of Contents
 
